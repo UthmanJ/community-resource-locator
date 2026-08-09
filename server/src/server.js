@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import connectDB from './config/db.js';
+import resourceRoutes from './routes/resourceRoutes.js';
 
 dotenv.config();
 
@@ -15,6 +16,8 @@ connectDB();
 app.get('/', (req, res) => {
   res.json({ message: 'Community Resource Locator API is running 🚀' });
 });
+
+app.use('/api/resources', resourceRoutes);
 
 const PORT = process.env.PORT || 5000;
 
