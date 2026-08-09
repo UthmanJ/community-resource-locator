@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { getResourceById } from '../services/api';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import { getResourceById, deleteResource } from '../services/api';
 
 function ResourceDetail() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [resource, setResource] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   useEffect(() => {
     getResourceById(id)
@@ -14,6 +16,18 @@ function ResourceDetail() {
       .catch(() => setError('Resource not found'))
       .finally(() => setLoading(false));
   }, [id]);
+
+  const handleDelete = async () => {
+    if (!window.confirm('Are you sure you want to delete this resource?')) return;
+    try {
+      setDeleting(true);
+      await deleteResource(id);
+      navigate('/');
+    } catch (err) {
+      setError('Failed to delete resource.');
+      setDeleting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -44,7 +58,7 @@ function ResourceDetail() {
       </Link>
 
       <div className="bg-slate-800 border border-slate-700 rounded-lg p-6 md:p-8 max-w-2xl">
-        <div className="flex items-start justify-between mb-4">
+        <div className="flex items-start justify-between mb-4 gap-3">
           <h1 className="text-2xl font-bold text-slate-100">{resource.name}</h1>
           <span className="text-xs bg-emerald-500/20 text-emerald-400 px-3 py-1 rounded-full shrink-0">
             {resource.category}
@@ -53,7 +67,7 @@ function ResourceDetail() {
 
         <p className="text-slate-300 mb-6">{resource.description}</p>
 
-        <div className="space-y-3 text-sm">
+        <div className="space-y-3 text-sm mb-6">
           <div>
             <p className="text-slate-500 text-xs uppercase tracking-wide mb-1">Address</p>
             <p className="text-slate-200">{resource.address}</p>
@@ -78,6 +92,14 @@ function ResourceDetail() {
             <p className="text-slate-200">{resource.submittedBy}</p>
           </div>
         </div>
+
+        <button
+          onClick={handleDelete}
+          disabled={deleting}
+          className="text-sm text-red-400 hover:text-red-300 border border-red-500/40 hover:border-red-500/60 px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+        >
+          {deleting ? 'Deleting...' : 'Delete Resource'}
+        </button>
       </div>
     </div>
   );
