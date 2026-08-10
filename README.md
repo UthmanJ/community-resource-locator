@@ -6,6 +6,13 @@ A full-stack, map-based web app for discovering and sharing local community reso
 
 Many communities lack a simple, centralized way to discover local services. This app lets anyone browse an interactive map of submitted resources, filter by category, and contribute new ones — turning it into a living, community-maintained directory.
 
+## Live Demo
+
+🔗 **App:** https://community-resource-locator.netlify.app
+🔗 **API:** https://community-resource-locator.onrender.com/api/resources
+
+Note: the backend is hosted on Render's free tier and may take 30-60 seconds to wake up on first load after inactivity.
+
 ## Features
 
 - **Interactive map** — all resources plotted as clickable markers (powered by Leaflet + OpenStreetMap, no API key required)
